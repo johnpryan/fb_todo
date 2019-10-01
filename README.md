@@ -1,3 +1,3 @@
-# fb_todo
+# Firebase todo app
 
-A new Flutter project.
+Firebase setup instructions: https://firebase.google.com/docs/flutter/setup

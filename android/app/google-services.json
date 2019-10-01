@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "942025734552",
+    "firebase_url": "https://ryjohn-fb-todo.firebaseio.com",
+    "project_id": "ryjohn-fb-todo",
+    "storage_bucket": "ryjohn-fb-todo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942025734552:android:0a5fc9b4da0073e708d3ed",
+        "android_client_info": {
+          "package_name": "com.example.fb_todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942025734552-f6igf32hc1qtsfs53115irdvfsvjqj2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU4N5bqi4i2mjg7YZMZK0syACOVhSq4Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942025734552-f6igf32hc1qtsfs53115irdvfsvjqj2j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "942025734552-482rkvd1qsil31d4dfumpgqk74k3obk7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fbTodo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
