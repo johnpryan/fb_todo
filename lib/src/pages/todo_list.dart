@@ -46,11 +46,31 @@ class _TodoListPageState extends State<TodoListPage> {
     return user;
   }
 
+  void _logOut() {
+    _auth.signOut();
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Todos"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              child: Center(child: Text('Todo App'),),
+            ),
+            ListTile(
+              title: Text('Log out'),
+              onTap: () {
+                _logOut();
+              },
+            ),
+          ],
+        ),
       ),
       body: ListView.builder(
         itemCount: _todos.length,

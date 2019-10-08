@@ -6,16 +6,13 @@ class TodoService {
 
   TodoService() : firestore = Firestore.instance;
 
+  // Loads todos for the current user. Database is set up as:
+  // users/<uid>/todos/<id>
   Future<List<Todo>> getTodos(FirebaseUser user) async {
     var snapshot = firestore.collection('users').document(user.uid);
-    print(user.uid);
-    print(snapshot);
     var collection = snapshot.collection('todos');
-    print(collection);
     var todosSnapshot = await collection.snapshots().first;
-    print(todosSnapshot);
     var todos = todosSnapshot.documents;
-    print(todos);
     return todos.map((snapshot) {
       return Todo.fromJson(snapshot.data);
     }).toList();

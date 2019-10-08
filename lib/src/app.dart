@@ -3,6 +3,8 @@ import 'package:fb_todo/src/services/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/login.dart';
+
 class TodoApp extends StatefulWidget {
   @override
   _TodoAppState createState() => _TodoAppState();
@@ -10,6 +12,7 @@ class TodoApp extends StatefulWidget {
 
 class _TodoAppState extends State<TodoApp> {
   TodoService service;
+
   @override
   void initState() {
     super.initState();
@@ -21,9 +24,26 @@ class _TodoAppState extends State<TodoApp> {
     return Provider<TodoService>.value(
       value: service,
       child: MaterialApp(
-        home: TodoListPage(
-          service: service,
-        ),
+        onGenerateRoute: (settings) {
+          if (settings.name == "/") {
+            return PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  TodoListPage(service: service),
+              transitionsBuilder: (context, animation1, animation2, child) {
+                return FadeTransition(opacity: animation1, child: child);
+              },
+            );
+          }
+          if (settings.name == '/login') {
+            return PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => LoginPage(),
+              transitionsBuilder: (context, animation1, animation2, child) {
+                return FadeTransition(opacity: animation1, child: child);
+              },
+            );
+          }
+          return null;
+        },
       ),
     );
   }
