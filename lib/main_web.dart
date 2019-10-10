@@ -19,6 +19,7 @@ class _TodoAppState extends State<WebTodoApp> {
   @override
   void initState() {
     super.initState();
+
     var app = fb.initializeApp(
       apiKey: "AIzaSyB3621RvSUbxgCPw3Dnq4uwKTjpZWILubI",
       authDomain: "ryjohn-fb-todo.firebaseapp.com",
