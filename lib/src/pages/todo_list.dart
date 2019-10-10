@@ -1,23 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:fb_todo/src/app_context.dart';
+import 'package:fb_todo/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../services/todo_service.dart';
 
 class TodoListPage extends StatefulWidget {
-  final TodoService service;
+  final AppContext appContext;
 
-  TodoListPage({@required this.service});
+  TodoListPage({@required this.appContext});
 
   @override
   _TodoListPageState createState() => _TodoListPageState();
 }
 
 class _TodoListPageState extends State<TodoListPage> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   List<Todo> _todos = [];
+
+  AuthService get authService => widget.appContext.authService;
+  TodoService get todoService => widget.appContext.todoService;
 
   @override
   void initState() {
@@ -26,29 +26,12 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Future _init() async {
-    var user = await _signIn();
-    var todos = await widget.service.getTodos(user);
+    var user = await authService.signIn();
+    var todos = await todoService.getTodos(user);
+
     setState(() {
       _todos = todos;
     });
-  }
-
-  Future<FirebaseUser> _signIn() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    var googleAuth = await googleUser.authentication;
-
-    var credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    var user = (await _auth.signInWithCredential(credential)).user;
-    return user;
-  }
-
-  void _logOut() {
-    _auth.signOut();
-    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   @override
@@ -61,12 +44,15 @@ class _TodoListPageState extends State<TodoListPage> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Center(child: Text('Todo App'),),
+              child: Center(
+                child: Text('Todo App'),
+              ),
             ),
             ListTile(
               title: Text('Log out'),
               onTap: () {
-                _logOut();
+                authService.logOut();
+                Navigator.of(context).pushReplacementNamed('/login');
               },
             ),
           ],

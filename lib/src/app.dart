@@ -1,8 +1,10 @@
 import 'package:fb_todo/src/pages/todo_list.dart';
+import 'package:fb_todo/src/services/auth_service.dart';
 import 'package:fb_todo/src/services/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'app_context.dart';
 import 'pages/login.dart';
 
 class TodoApp extends StatefulWidget {
@@ -11,24 +13,24 @@ class TodoApp extends StatefulWidget {
 }
 
 class _TodoAppState extends State<TodoApp> {
-  TodoService service;
+  AppContext appContext;
 
   @override
   void initState() {
     super.initState();
-    service = TodoService();
+    appContext = AppContext(AuthService(), TodoService());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Provider<TodoService>.value(
-      value: service,
+    return Provider<AppContext>.value(
+      value: appContext,
       child: MaterialApp(
         onGenerateRoute: (settings) {
           if (settings.name == "/") {
             return PageRouteBuilder(
               pageBuilder: (context, animation1, animation2) =>
-                  TodoListPage(service: service),
+                  TodoListPage(appContext: appContext),
               transitionsBuilder: (context, animation1, animation2, child) {
                 return FadeTransition(opacity: animation1, child: child);
               },
