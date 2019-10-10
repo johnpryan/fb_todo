@@ -1,8 +1,7 @@
 import 'package:fb_todo/src/app_context.dart';
-import 'package:fb_todo/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
-import '../services/todo_service.dart';
+import '../services/services.dart';
 
 class TodoListPage extends StatefulWidget {
   final AppContext appContext;
@@ -27,7 +26,7 @@ class _TodoListPageState extends State<TodoListPage> {
 
   Future _init() async {
     var user = await authService.signIn();
-    var todos = await todoService.getTodos(user);
+    var todos = await todoService.getTodos(user.uid);
 
     setState(() {
       _todos = todos;

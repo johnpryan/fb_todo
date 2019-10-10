@@ -57,6 +57,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  crossfire:
+    dependency: "direct overridden"
+    description:
+      path: "/Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire"
+      relative: false
+    source: path
+    version: "2.1.0"
+  crossfire_flutter:
+    dependency: "direct main"
+    description:
+      path: "/Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire_flutter"
+      relative: false
+    source: path
+    version: "2.1.0"
+  crossfire_web:
+    dependency: "direct main"
+    description:
+      path: "/Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire_web"
+      relative: false
+    source: path
+    version: "2.1.0"
   crypto:
     dependency: transitive
     description:
@@ -71,6 +92,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  firebase:
+    dependency: transitive
+    description:
+      name: firebase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.4"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -85,6 +113,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0+9"
+  firebase_database:
+    dependency: transitive
+    description:
+      name: firebase_database
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.7"
+  firebase_storage:
+    dependency: transitive
+    description:
+      name: firebase_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -109,6 +151,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.7"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.0+2"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.3"
   image:
     dependency: transitive
     description:
@@ -116,6 +172,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1+1"
+  jsifier:
+    dependency: transitive
+    description:
+      name: jsifier
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   matcher:
     dependency: transitive
     description:

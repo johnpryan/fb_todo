@@ -1,8 +1,8 @@
-import 'services/auth_service.dart';
-import 'services/todo_service.dart';
+import 'services/services.dart';
 
 class AppContext {
-  AuthService authService;
-  TodoService todoService;
+  final AuthService authService;
+  final TodoService todoService;
+
   AppContext(this.authService, this.todoService);
 }
