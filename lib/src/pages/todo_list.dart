@@ -1,4 +1,5 @@
 import 'package:fb_todo/src/app_context.dart';
+import 'package:fb_todo/src/widgets/todo.dart';
 import 'package:flutter/material.dart';
 
 import '../services/services.dart';
@@ -60,9 +61,7 @@ class _TodoListPageState extends State<TodoListPage> {
       body: ListView.builder(
         itemCount: _todos.length,
         itemBuilder: (context, idx) {
-          return ListTile(
-            title: Text(_todos[idx].description),
-          );
+          return TodoWidget(_todos[idx]);
         },
       ),
     );
