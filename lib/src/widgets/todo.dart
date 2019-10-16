@@ -1,7 +1,6 @@
 import 'package:fb_todo/src/model/todo.dart';
 import 'package:flutter/material.dart';
 
-import 'package:fb_todo/src/services/services.dart';
 import 'package:flutter/services.dart';
 
 class TodoWidget extends StatefulWidget {
