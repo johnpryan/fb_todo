@@ -1,3 +1,4 @@
+import 'package:fb_todo/src/model/todo.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide FirebaseUser;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +45,22 @@ class FlutterTodoService implements TodoService {
     var todosSnapshot = await collection.snapshots().first;
     var todos = todosSnapshot.documents;
     return todos.map((snapshot) {
-      return Todo.fromJson(snapshot.data);
+      return Todo.fromJson(snapshot.data)..id = snapshot.documentID;
     }).toList();
+  }
+
+  Future update(Todo todo, String userId) async {
+    var snapshot = firestore.document('users/$userId/todos/${todo.id}');
+    await snapshot.updateData(todo.toJson());
+  }
+
+  Stream<List<Todo>> onChanged(String userId) {
+    var snapshots = firestore.collection('users/$userId/todos').snapshots();
+    return snapshots.map((querySnapshot) {
+      return querySnapshot.documentChanges.map((docChange) {
+        var doc = docChange.document;
+        return Todo.fromJson(doc.data)..id = doc.documentID;
+      }).toList();
+    });
   }
 }

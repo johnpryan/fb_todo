@@ -21,3 +21,6 @@ flutter run -d chrome lib/main_web.dart
 - Firebase + Flutter setup instructions:
 https://firebase.google.com/docs/flutter/setup
 - google_sign_in instructions: https://pub.dev/packages/google_sign_in
+- Authenticating your client for google_sign_in: https://developers.google.com/android/guides/client-auth
+- Google sign-in guide:
+https://medium.com/flutter-community/flutter-implementing-google-sign-in-71888bca24ed

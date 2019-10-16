@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'package:fb_todo/src/model/todo.dart';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firestore.dart';
 
@@ -33,8 +34,24 @@ class WebTodoService implements TodoService {
     var todosSnapshot = await collection.onSnapshot.first;
     var todos = todosSnapshot.docs;
     return todos.map((snapshot) {
-      return Todo.fromJson(snapshot.data());
+      return Todo.fromJson(snapshot.data())..id = snapshot.id;
     }).toList();
+  }
+
+  @override
+  Future update(Todo todo, String userId) async {
+    var snapshot = _firestore.doc('users/$userId/todos/${todo.id}');
+    await snapshot.update(data: todo.toJson());
+  }
+
+  Stream<List<Todo>> onChanged(String userId) {
+    var snapshots = _firestore.collection('users/$userId/todos').onSnapshot;
+    return snapshots.map((querySnapshot) {
+      return querySnapshot.docChanges().map((docChange) {
+        var doc = docChange.doc;
+        return Todo.fromJson(doc.data())..id = doc.id;
+      }).toList();
+    });
   }
 }
 
