@@ -63,4 +63,8 @@ class FlutterTodoService implements TodoService {
       }).toList();
     });
   }
+
+  void addNew(String userId) {
+    firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
 }

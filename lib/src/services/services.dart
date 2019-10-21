@@ -15,4 +15,5 @@ abstract class TodoService {
   Future<List<Todo>> getTodos(String userId);
   Future update(Todo todo, String userId);
   Stream<List<Todo>> onChanged(String userId);
+  void addNew(String userId);
 }

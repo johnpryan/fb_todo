@@ -53,6 +53,10 @@ class WebTodoService implements TodoService {
       }).toList();
     });
   }
+
+  void addNew(String userId) {
+    _firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
 }
 
 class _FirebaseUserImpl implements FirebaseUser {
