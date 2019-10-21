@@ -39,16 +39,21 @@ class _TodoListPageState extends State<TodoListPage> {
   Future _init() async {
     await _signIn();
     await _fetchTodos();
-    _updateSubscription = todoService.onChanged(_user.uid).listen((changed) {
+    _updateSubscription =
+        todoService.onChanged(_user.uid).listen((changedTodos) {
       var newTodos = List<Todo>.from(_todos);
 
       // Update all items that exist in both collections
-      for (var changedItem in changed) {
-        var toChangeIdx = newTodos.indexWhere((t) => t.id == changedItem.id);
-        newTodos[toChangeIdx].updateFrom(changedItem);
+      for (var changed in changedTodos) {
+        var idx = newTodos.indexWhere((t) => t.id == changed.id);
+        if (idx >= 0) {
+          // Already exists; update
+          newTodos[idx].updateFrom(changed);
+        } else if (idx == -1) {
+          // Doesn't exist; add
+          newTodos.add(changed);
+        }
       }
-
-      // TODO: add and remove
 
       setState(() {
         _todos = newTodos;
@@ -109,6 +114,12 @@ class _TodoListPageState extends State<TodoListPage> {
               todoService.update(_todos[idx], _user.uid);
             },
           );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          todoService.addNew(_user.uid);
         },
       ),
     );
