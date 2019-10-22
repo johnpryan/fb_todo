@@ -41,8 +41,8 @@ class _TodoWidgetState extends State<TodoWidget> {
     });
 
     focusNode = FocusNode()
+      // Emit a change event when this text field is unfocused
       ..addListener(() {
-        // Emit a change event when this text field is unfocused
         widget.onChanged();
       });
 
@@ -56,16 +56,6 @@ class _TodoWidgetState extends State<TodoWidget> {
           widget.todo.description = textController.text;
         });
       });
-  }
-
-  // Key handling is only required to prevent extra firebase writes and
-  // due to onEditingComplete not firing on the web.
-  // https://github.com/flutter/flutter/issues/35435
-  void _handleKey(RawKeyEvent event) {
-    if (event is RawKeyUpEvent && event.data.keyLabel == 'Enter') {
-      widget.onChanged();
-      focusNode.unfocus();
-    }
   }
 
   @override
@@ -85,26 +75,25 @@ class _TodoWidgetState extends State<TodoWidget> {
             onChanged: (checked) {
               setState(() {
                 widget.todo.done = checked;
-                widget.onChanged();
               });
+              widget.onChanged();
             },
           ),
           Expanded(
-            child: RawKeyboardListener(
+            child: TextField(
+              controller: textController,
               focusNode: focusNode,
-              onKey: _handleKey,
-              child: TextField(
-                controller: textController,
-                style: TodoWidget.textStyle,
-                onEditingComplete: () {
-                  widget.onChanged();
-                  focusNode.unfocus();
-                },
-                cursorColor: Colors.blue,
-                decoration: InputDecoration(
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                ),
+              style: TodoWidget.textStyle,
+              // Emit a change event when this text field is submitted (e.g.
+              // the user presses enter on web or "done" on mobile)
+              onSubmitted: (_) {
+                widget.onChanged();
+                focusNode.unfocus();
+              },
+              cursorColor: Colors.blue,
+              decoration: InputDecoration(
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
             ),
           ),
