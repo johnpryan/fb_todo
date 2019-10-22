@@ -38,38 +38,38 @@ class _TodoListPageState extends State<TodoListPage> {
 
   Future _init() async {
     await _signIn();
-    await _fetchTodos();
-    _updateSubscription =
-        todoService.onChanged(_user.uid).listen((changedTodos) {
-      var newTodos = List<Todo>.from(_todos);
-
-      // Update all items that exist in both collections
-      for (var changed in changedTodos) {
-        var idx = newTodos.indexWhere((t) => t.id == changed.id);
-        if (idx >= 0) {
-          // Already exists; update
-          newTodos[idx].updateFrom(changed);
-        } else if (idx == -1) {
-          // Doesn't exist; add
-          newTodos.add(changed);
-        }
-      }
-
-      setState(() {
-        _todos = newTodos;
-      });
-    });
+    _updateSubscription = todoService
+        .onChanged(_user.uid)
+        .listen((changed) => _updateTodos(changed));
   }
 
   Future _signIn() async {
     _user = await authService.signIn();
   }
 
-  Future _fetchTodos() async {
-    var todos = await todoService.getTodos(_user.uid);
+  void _updateTodos(List<TodoChange> changes) {
+    var newTodos = List<Todo>.from(_todos);
+
+    // Update all items that exist in both collections
+    for (var change in changes) {
+      switch (change.type) {
+        case TodoChangeType.added:
+          newTodos.add(change.todo);
+          break;
+        case TodoChangeType.removed:
+          newTodos.removeWhere((t) => t.id == change.todo.id);
+          break;
+        case TodoChangeType.modified:
+          var idx = newTodos.indexWhere((t) => t.id == change.todo.id);
+          if (idx >= 0) {
+            newTodos[idx].updateFrom(change.todo);
+          }
+          break;
+      }
+    }
 
     setState(() {
-      _todos = todos;
+      _todos = newTodos;
     });
   }
 
@@ -78,14 +78,6 @@ class _TodoListPageState extends State<TodoListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Todos"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _fetchTodos();
-            },
-          )
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -112,6 +104,15 @@ class _TodoListPageState extends State<TodoListPage> {
             todo: _todos[idx],
             onChanged: () {
               todoService.update(_todos[idx], _user.uid);
+            },
+            onDismissed: () {
+              // The Dismissible widget needs to be removed from the widget tree
+              // immediately. Remove the
+              Todo toRemove;
+              setState(() {
+                toRemove = _todos.removeAt(idx);
+              });
+              todoService.remove(toRemove, _user.uid);
             },
           );
         },

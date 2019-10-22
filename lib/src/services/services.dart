@@ -11,9 +11,22 @@ abstract class FirebaseUser {
   String get uid;
 }
 
+class TodoChange {
+  final TodoChangeType type;
+  final Todo todo;
+
+  TodoChange(this.type, this.todo);
+}
+
+enum TodoChangeType {
+  added,
+  modified,
+  removed,
+}
+
 abstract class TodoService {
-  Future<List<Todo>> getTodos(String userId);
-  Future update(Todo todo, String userId);
-  Stream<List<Todo>> onChanged(String userId);
+  Future<void> update(Todo todo, String userId);
+  Future<void> remove(Todo todo, String userId);
+  Stream<List<TodoChange>> onChanged(String userId);
   void addNew(String userId);
 }

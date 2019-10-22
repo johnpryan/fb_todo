@@ -37,34 +37,42 @@ class FlutterTodoService implements TodoService {
 
   FlutterTodoService() : firestore = Firestore.instance;
 
-  // Loads todos for the current user. Database is set up as:
-  // users/<uid>/todos/<id>
-  Future<List<Todo>> getTodos(String userId) async {
-    var snapshot = firestore.collection('users').document(userId);
-    var collection = snapshot.collection('todos');
-    var todosSnapshot = await collection.snapshots().first;
-    var todos = todosSnapshot.documents;
-    return todos.map((snapshot) {
-      return Todo.fromJson(snapshot.data)..id = snapshot.documentID;
-    }).toList();
-  }
-
-  Future update(Todo todo, String userId) async {
+  Future<void> update(Todo todo, String userId) async {
     var snapshot = firestore.document('users/$userId/todos/${todo.id}');
     await snapshot.updateData(todo.toJson());
   }
 
-  Stream<List<Todo>> onChanged(String userId) {
+  Future<void> remove(Todo todo, String userId) async {
+    var snapshot = firestore.document('users/$userId/todos/${todo.id}');
+    await snapshot.delete();
+  }
+
+  Stream<List<TodoChange>> onChanged(String userId) {
     var snapshots = firestore.collection('users/$userId/todos').snapshots();
     return snapshots.map((querySnapshot) {
       return querySnapshot.documentChanges.map((docChange) {
         var doc = docChange.document;
-        return Todo.fromJson(doc.data)..id = doc.documentID;
+        var todo = Todo.fromJson(doc.data)..id = doc.documentID;
+        var type = _getChangeType(docChange);
+        return TodoChange(type, todo);
       }).toList();
     });
   }
 
   void addNew(String userId) {
     firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
+
+  TodoChangeType _getChangeType(DocumentChange docChange) {
+    switch (docChange.type) {
+      case DocumentChangeType.added:
+        return TodoChangeType.added;
+      case DocumentChangeType.modified:
+        return TodoChangeType.modified;
+      case DocumentChangeType.removed:
+        return TodoChangeType.removed;
+      default:
+        return null;
+    }
   }
 }

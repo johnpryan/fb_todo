@@ -7,10 +7,12 @@ class TodoWidget extends StatefulWidget {
   static const textStyle = TextStyle(fontSize: 16, color: Colors.black);
   final Todo todo;
   final VoidCallback onChanged;
+  final VoidCallback onDismissed;
 
   TodoWidget({
     @required this.todo,
     @required this.onChanged,
+    @required this.onDismissed,
   }) : super(key: ValueKey(todo.id));
 
   @override
@@ -38,7 +40,11 @@ class _TodoWidgetState extends State<TodoWidget> {
       }
     });
 
-    focusNode = FocusNode();
+    focusNode = FocusNode()
+      ..addListener(() {
+        // Emit a change event when this text field is unfocused
+        widget.onChanged();
+      });
 
     textController = TextEditingController()
       ..text = widget.todo.description
@@ -56,48 +62,54 @@ class _TodoWidgetState extends State<TodoWidget> {
   // due to onEditingComplete not firing on the web.
   // https://github.com/flutter/flutter/issues/35435
   void _handleKey(RawKeyEvent event) {
-    if (event is RawKeyUpEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.enter) {
-        widget.onChanged();
-        focusNode.unfocus();
-      } else if (event is RawKeyEventDataWeb) {
-        if (event.data.keyLabel == 'Enter') {
-          widget.onChanged();
-          focusNode.unfocus();
-        }
-      }
+    if (event is RawKeyUpEvent && event.data.keyLabel == 'Enter') {
+      widget.onChanged();
+      focusNode.unfocus();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-          value: widget.todo.done,
-          onChanged: (checked) {
-            setState(() {
-              widget.todo.done = checked;
-              widget.onChanged();
-            });
-          },
-        ),
-        Expanded(
-          child: RawKeyboardListener(
-            focusNode: focusNode,
-            onKey: _handleKey,
-            child: TextField(
-              controller: textController,
-              style: TodoWidget.textStyle,
-              cursorColor: Colors.blue,
-              decoration: InputDecoration(
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
+    return Dismissible(
+      key: ValueKey(widget.todo.id),
+      background: Container(
+        color: Colors.blue,
+      ),
+      onDismissed: (direction) {
+        widget.onDismissed();
+      },
+      child: Row(
+        children: [
+          Checkbox(
+            value: widget.todo.done,
+            onChanged: (checked) {
+              setState(() {
+                widget.todo.done = checked;
+                widget.onChanged();
+              });
+            },
+          ),
+          Expanded(
+            child: RawKeyboardListener(
+              focusNode: focusNode,
+              onKey: _handleKey,
+              child: TextField(
+                controller: textController,
+                style: TodoWidget.textStyle,
+                onEditingComplete: () {
+                  widget.onChanged();
+                  focusNode.unfocus();
+                },
+                cursorColor: Colors.blue,
+                decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

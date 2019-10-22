@@ -28,34 +28,43 @@ class WebTodoService implements TodoService {
   WebTodoService(fb.App app) : _firestore = fb.firestore(app);
 
   @override
-  Future<List<Todo>> getTodos(String userId) async {
-    var snapshot = _firestore.collection('users').doc(userId);
-    var collection = snapshot.collection('todos');
-    var todosSnapshot = await collection.onSnapshot.first;
-    var todos = todosSnapshot.docs;
-    return todos.map((snapshot) {
-      return Todo.fromJson(snapshot.data())..id = snapshot.id;
-    }).toList();
-  }
-
-  @override
   Future update(Todo todo, String userId) async {
     var snapshot = _firestore.doc('users/$userId/todos/${todo.id}');
     await snapshot.update(data: todo.toJson());
   }
 
-  Stream<List<Todo>> onChanged(String userId) {
+  Future<void> remove(Todo todo, String userId) async {
+    var snapshot = _firestore.doc('users/$userId/todos/${todo.id}');
+    await snapshot.delete();
+  }
+
+  Stream<List<TodoChange>> onChanged(String userId) {
     var snapshots = _firestore.collection('users/$userId/todos').onSnapshot;
     return snapshots.map((querySnapshot) {
       return querySnapshot.docChanges().map((docChange) {
         var doc = docChange.doc;
-        return Todo.fromJson(doc.data())..id = doc.id;
+        var todo = Todo.fromJson(doc.data())..id = doc.id;
+        var type = _getChangeType(docChange);
+        return TodoChange(type, todo);
       }).toList();
     });
   }
 
   void addNew(String userId) {
     _firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
+
+  TodoChangeType _getChangeType(DocumentChange docChange) {
+    switch (docChange.type) {
+      case "added":
+        return TodoChangeType.added;
+      case "removed":
+        return TodoChangeType.removed;
+      case "modified":
+        return TodoChangeType.modified;
+      default:
+        return null;
+    }
   }
 }
 
