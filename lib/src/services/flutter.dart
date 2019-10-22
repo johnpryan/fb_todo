@@ -22,8 +22,8 @@ class FlutterAuthService implements AuthService {
     return _FirebaseUserImpl(user.uid);
   }
 
-  void logOut() {
-    _auth.signOut();
+  Future logOut() async {
+    await _auth.signOut();
   }
 }
 

@@ -89,8 +89,8 @@ class _TodoListPageState extends State<TodoListPage> {
             ),
             ListTile(
               title: Text('Log out'),
-              onTap: () {
-                authService.logOut();
+              onTap: () async {
+                await authService.logOut();
                 Navigator.of(context).pushReplacementNamed('/login');
               },
             ),

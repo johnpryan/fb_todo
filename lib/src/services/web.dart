@@ -10,14 +10,26 @@ class WebAuthService implements AuthService {
   WebAuthService(fb.App app) : _auth = fb.auth(app);
 
   @override
-  void logOut() {
-    _auth.signOut();
+  Future logOut() async {
+    await _auth.signOut();
   }
 
   @override
   Future<FirebaseUser> signIn() async {
-    var credential = await _auth.signInWithPopup(fb.GoogleAuthProvider());
-    return _FirebaseUserImpl(credential.user.uid);
+    var currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      return _FirebaseUserImpl(currentUser.uid);
+    }
+
+    // First, try to get the redirect result if there is one. If not, sign in
+    // using a redirect.
+    var result = await _auth.getRedirectResult();
+    if (result.user == null) {
+      await _auth.signInWithRedirect(fb.GoogleAuthProvider());
+      result = await _auth.getRedirectResult();
+    }
+
+    return _FirebaseUserImpl(result.user.uid);
   }
 }
 

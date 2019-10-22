@@ -4,7 +4,7 @@ import 'package:fb_todo/src/model/todo.dart';
 
 abstract class AuthService {
   Future<FirebaseUser> signIn();
-  void logOut();
+  Future logOut();
 }
 
 abstract class FirebaseUser {
