@@ -1,8 +1,6 @@
 import 'package:fb_todo/src/model/todo.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/services.dart';
-
 class TodoWidget extends StatefulWidget {
   static const textStyle = TextStyle(fontSize: 16, color: Colors.black);
   final Todo todo;

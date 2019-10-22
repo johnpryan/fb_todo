@@ -1,4 +1,3 @@
-import 'dart:html' as html;
 import 'package:fb_todo/src/model/todo.dart';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firestore.dart';
