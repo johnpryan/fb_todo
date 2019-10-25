@@ -40,7 +40,10 @@ class _TodoListPageState extends State<TodoListPage> {
     await _signIn();
     _updateSubscription = todoService
         .onChanged(_user.uid)
-        .listen((changed) => _updateTodos(changed));
+        .listen((changed) => _updateTodos(changed))
+        ..onError((error) {
+          print('error subscribing: $error');
+        });
   }
 
   Future _signIn() async {
