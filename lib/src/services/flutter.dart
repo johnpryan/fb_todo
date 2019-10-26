@@ -22,7 +22,7 @@ class FlutterAuthService implements AuthService {
     return _FirebaseUserImpl(user.uid);
   }
 
-  Future logOut() async {
+  Future signOut() async {
     await _auth.signOut();
   }
 }
@@ -36,6 +36,10 @@ class FlutterTodoService implements TodoService {
   Firestore firestore;
 
   FlutterTodoService() : firestore = Firestore.instance;
+
+  Future<void> add(String userId) async {
+    await firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
 
   Future<void> update(Todo todo, String userId) async {
     var snapshot = firestore.document('users/$userId/todos/${todo.id}');
@@ -57,10 +61,6 @@ class FlutterTodoService implements TodoService {
         return TodoChange(type, todo);
       }).toList();
     });
-  }
-
-  void addNew(String userId) {
-    firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
   }
 
   TodoChangeType _getChangeType(DocumentChange docChange) {

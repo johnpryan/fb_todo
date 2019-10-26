@@ -10,7 +10,7 @@ class WebAuthService implements AuthService {
   WebAuthService(fb.App app) : _auth = fb.auth(app);
 
   @override
-  Future logOut() async {
+  Future signOut() async {
     await _auth.signOut();
   }
 
@@ -38,8 +38,11 @@ class WebTodoService implements TodoService {
 
   WebTodoService(fb.App app) : _firestore = fb.firestore(app);
 
-  @override
-  Future update(Todo todo, String userId) async {
+  Future<void> add(String userId) async {
+    await _firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
+  }
+  
+  Future<void> update(Todo todo, String userId) async {
     var snapshot = _firestore.doc('users/$userId/todos/${todo.id}');
     await snapshot.update(data: todo.toJson());
   }
@@ -61,9 +64,6 @@ class WebTodoService implements TodoService {
     });
   }
 
-  void addNew(String userId) {
-    _firestore.collection('users/$userId/todos').add(Todo(false, '').toJson());
-  }
 
   TodoChangeType _getChangeType(DocumentChange docChange) {
     switch (docChange.type) {

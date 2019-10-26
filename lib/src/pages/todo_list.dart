@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fb_todo/src/app_context.dart';
 import 'package:fb_todo/src/model/todo.dart';
+import 'package:fb_todo/src/widgets/header.dart';
 import 'package:fb_todo/src/widgets/todo.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +42,9 @@ class _TodoListPageState extends State<TodoListPage> {
     _updateSubscription = todoService
         .onChanged(_user.uid)
         .listen((changed) => _updateTodos(changed))
-        ..onError((error) {
-          print('error subscribing: $error');
-        });
+          ..onError((error) {
+            print('error subscribing: $error');
+          });
   }
 
   Future _signIn() async {
@@ -79,9 +80,6 @@ class _TodoListPageState extends State<TodoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Todos"),
-      ),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
@@ -93,37 +91,41 @@ class _TodoListPageState extends State<TodoListPage> {
             ListTile(
               title: Text('Log out'),
               onTap: () async {
-                await authService.logOut();
+                await authService.signOut();
                 Navigator.of(context).pushReplacementNamed('/login');
               },
             ),
           ],
         ),
       ),
-      body: ListView.builder(
-        itemCount: _todos.length,
-        itemBuilder: (context, idx) {
-          return TodoWidget(
-            todo: _todos[idx],
-            onChanged: () {
-              todoService.update(_todos[idx], _user.uid);
-            },
-            onDismissed: () {
-              // The Dismissible widget needs to be removed from the widget tree
-              // immediately. Remove the
-              Todo toRemove;
-              setState(() {
-                toRemove = _todos.removeAt(idx);
-              });
-              todoService.remove(toRemove, _user.uid);
-            },
-          );
-        },
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Header('My Tasks'),
+            ..._todos.map((todo) {
+              return TodoWidget(
+                todo: todo,
+                onChanged: () {
+                  todoService.update(todo, _user.uid);
+                },
+                onDismissed: () {
+                  // The Dismissible widget needs to be removed from the widget tree
+                  // immediately.
+                  setState(() {
+                    if (_todos.remove(todo)) {
+                      todoService.remove(todo, _user.uid);
+                    }
+                  });
+                },
+              );
+            }),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          todoService.addNew(_user.uid);
+          todoService.add(_user.uid);
         },
       ),
     );

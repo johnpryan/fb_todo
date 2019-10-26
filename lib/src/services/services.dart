@@ -4,7 +4,7 @@ import 'package:fb_todo/src/model/todo.dart';
 
 abstract class AuthService {
   Future<FirebaseUser> signIn();
-  Future logOut();
+  Future signOut();
 }
 
 abstract class FirebaseUser {
@@ -25,8 +25,8 @@ enum TodoChangeType {
 }
 
 abstract class TodoService {
+  Future<void> add(String userId);
   Future<void> update(Todo todo, String userId);
   Future<void> remove(Todo todo, String userId);
   Stream<List<TodoChange>> onChanged(String userId);
-  void addNew(String userId);
 }

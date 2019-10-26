@@ -2,7 +2,6 @@ import 'package:fb_todo/src/model/todo.dart';
 import 'package:flutter/material.dart';
 
 class TodoWidget extends StatefulWidget {
-  static const textStyle = TextStyle(fontSize: 16, color: Colors.black);
   final Todo todo;
   final VoidCallback onChanged;
   final VoidCallback onDismissed;
@@ -81,7 +80,8 @@ class _TodoWidgetState extends State<TodoWidget> {
             child: TextField(
               controller: textController,
               focusNode: focusNode,
-              style: TodoWidget.textStyle,
+              style:
+                  Theme.of(context).textTheme.display1.copyWith(fontSize: 16),
               // Emit a change event when this text field is submitted (e.g.
               // the user presses enter on web or "done" on mobile)
               onSubmitted: (_) {
