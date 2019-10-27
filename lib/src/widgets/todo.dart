@@ -24,7 +24,7 @@ class _TodoWidgetState extends State<TodoWidget> {
   void initState() {
     super.initState();
 
-    widget.todo.onChanged.listen((_) {
+    widget.todo.changes.listen((_) {
       // Set the text controller's text to the new value. This will unfocus the
       // text input.
       if (textController.text != widget.todo.description) {

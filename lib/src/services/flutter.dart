@@ -51,7 +51,7 @@ class FlutterTodoService implements TodoService {
     await snapshot.delete();
   }
 
-  Stream<List<TodoChange>> onChanged(String userId) {
+  Stream<List<TodoChange>> changes(String userId) {
     var snapshots = firestore.collection('users/$userId/todos').snapshots();
     return snapshots.map((querySnapshot) {
       return querySnapshot.documentChanges.map((docChange) {

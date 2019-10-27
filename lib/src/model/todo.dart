@@ -17,7 +17,7 @@ class Todo {
     return Todo(other.done, other.description)..id = other.id;
   }
 
-  Stream get onChanged => _controller.stream;
+  Stream get changes => _controller.stream;
 
   set done(bool d) {
     if (_done == d) {

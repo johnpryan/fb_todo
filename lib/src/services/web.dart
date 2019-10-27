@@ -52,7 +52,7 @@ class WebTodoService implements TodoService {
     await snapshot.delete();
   }
 
-  Stream<List<TodoChange>> onChanged(String userId) {
+  Stream<List<TodoChange>> changes(String userId) {
     var snapshots = _firestore.collection('users/$userId/todos').onSnapshot;
     return snapshots.map((querySnapshot) {
       return querySnapshot.docChanges().map((docChange) {

@@ -7,6 +7,13 @@ abstract class AuthService {
   Future signOut();
 }
 
+abstract class TodoService {
+  Future<void> add(String userId);
+  Future<void> update(Todo todo, String userId);
+  Future<void> remove(Todo todo, String userId);
+  Stream<List<TodoChange>> changes(String userId);
+}
+
 abstract class FirebaseUser {
   String get uid;
 }
@@ -24,9 +31,3 @@ enum TodoChangeType {
   removed,
 }
 
-abstract class TodoService {
-  Future<void> add(String userId);
-  Future<void> update(Todo todo, String userId);
-  Future<void> remove(Todo todo, String userId);
-  Stream<List<TodoChange>> onChanged(String userId);
-}
