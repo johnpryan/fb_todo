@@ -12,10 +12,6 @@ dependencies:
   google_sign_in: any
   provider: ^3.1.0
   flutter_auth_buttons: ^0.5.0
-  crossfire_flutter:
-    path: /Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire_flutter
-  crossfire_web:
-    path: /Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire_web
 dependency_overrides:
   crossfire:
     path: /Users/ryjohn/code/github/apptreesoftware/crossfire/crossfire
