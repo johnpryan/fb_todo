@@ -11,13 +11,6 @@ On Android and iOS, `lib/main.dart` is used as the entry point:
 flutter run
 ```
 
-On web, use `main_web.dart` as the entrypoint to run with the web version of the
-Firebase client:
-
-```
-flutter run -d chrome lib/main_web.dart 
-```
-
 ## More information
 
 - [Firebase setup][firebase-setup]
